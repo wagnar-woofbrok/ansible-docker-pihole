@@ -1,0 +1,8 @@
+- hosts: valheim
+  gather_facts: true
+  become: true  # run as superuser/root
+  roles:
+    - packages
+    - docker
+    # - pihole
+    # - harden
