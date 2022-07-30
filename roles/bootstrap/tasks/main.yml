@@ -29,6 +29,8 @@
       - ca-certificates
       - apt-transport-https
       - curl
+      - gnupg
+      - lsb-release
       - dnsutils
       - raspberrypi-kernel
       - raspberrypi-kernel-headers

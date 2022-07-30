@@ -11,16 +11,17 @@ services:
       - "443:443/tcp"
     env_file:
       - /opt/dns/config/pihole.env
-		# NOTE: IFF running PiHole-Docker on redhat systems, the volumes
-		# entries must end in "...:z"
-		# https://github.com/pi-hole/docker-pi-hole/#running-pi-hole-docker
+    # NOTE: IFF running PiHole-Docker on redhat systems, the volumes
+    # entries must end in "...:z"
+    # https://github.com/pi-hole/docker-pi-hole/#running-pi-hole-docker
     volumes:
       - /opt/dns/config/etc-pihole:/etc/pihole
       - /opt/dns/config/etc-dnsmasq.d:/etc/dnsmasq.d
     dns:
-      - 1.1.1.1 # bootstrap DNS, not used for queries
+      - 127.0.0.1
+      - 9.9.9.9 # bootstrap DNS, not used for queries
     networks:
-      dns_net:
+      backend:
         ipv4_address: 10.0.1.3
     cap_add:
       - net_admin 				# modify routing tables and other network-related operations
@@ -48,13 +49,13 @@ services:
       - "5353/tcp"
       - "5353/udp"
     networks:
-      dns_net:
+      backend:
         ipv4_address: 10.0.1.2
     restart: unless-stopped
 {% endif %}
 
 networks:
-  dns_net:
+  backend:
     driver: bridge
     ipam:
       config:

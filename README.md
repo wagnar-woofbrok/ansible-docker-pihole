@@ -16,7 +16,11 @@ NOTE: Raspbian/Raspberry Pi OS is a debian-based Linux distro, which by default 
 
 ## Requirements
 
-A Raspberry PI (or debian-based distro server box) to be the target server for installation.
+A Linux machine to be the target server for installing PiHole and other services to be a DNS server.
+
+Tested on:
+* Raspbian (Debian) bullseye, armv7l
+* Ubuntu 20.04, x86_64
 
 Ansible also requires key authentication, so if that is not setup yet you will need to do that first. This can be done using `ssh-copy-id` working over password based SSH until the key is added to `authorized_keys` on the PiHole:
 
@@ -36,8 +40,24 @@ The first time the pi is setup, you will need to create and fill out a `.env` fi
 
 First, connect to the pi over SSH. Then run this command:
 ```
-reset web admin password: $ docker exec -it pihole -a -p
+reset web admin password: $ docker exec -it pihole pihole -a -p
 ```
+
+
+## Known Issues
+
+1. Occasionally the bootstrap apt update files with the following error message:
+
+```
+fatal: [server]: FAILED! => {"changed": false, "msg": "Failed to update apt cache: unknown reason"}
+```
+
+Unless this is the first time setup run, this is not a problem and can be ignored.
+
+
+## Thanks and Contributions
+
+Thanks to Matthew Booe for [his docker + traefik blog](https://codecaptured.com/blog/self-hosting-pi-hole-with-docker-and-traefik/) which helped me configure the Traefik reverse proxy to work with pihole.
 
 
 ## TODO
@@ -46,5 +66,8 @@ reset web admin password: $ docker exec -it pihole -a -p
 * Add reverse proxy (nginx or traefik)
 * Improve configurability of dnscrypt and other service settings; include being able to reconfigure and restart/redeploy the dns service(s)
 * Setup docker secret file for webpassword for pihole web admin
+* Finish implementing optionally enabling `apt-transport-tor` and/or `apt-transport-https`
 * Create a `reset` role for resetting the state of the raspberry pi to a default state
+* Create a `generate_config` role for processing and using env vars to create the files needed to run the dockerized services without using Ansible for users that just want the configurable docker stuff alone
 * Research using [arm-runner-action in GHA](https://github.com/pguyot/arm-runner-action) to create CI pipeline testing this setup on virtualized Raspberry Pi instances
+* Handling systemd-resolved: can conflicts on port 53, is used by system itself, disabling can break DNS for the box; is it really best practice to disable it? Editing `/etc/systemd/resolved.conf` does not seem to work disabling stub resolver and setting DNS to 127.0.0.1

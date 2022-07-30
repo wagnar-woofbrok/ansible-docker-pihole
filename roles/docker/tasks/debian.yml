@@ -8,13 +8,12 @@
   ansible.builtin.shell: mkdir -p /etc/apt/keyrings
 
 - name: Add Docker GPG apt key
-  become: true
-  apt_key:
-    url: https://download.docker.com/linux/debian/gpg
-    state: present
-  # ansible.builtin.shell: |
-  #   curl -fsSL https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+  ansible.builtin.shell: |
+    curl -fsSL https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
 
+  # apt_key:
+  #   url: https://download.docker.com/linux/debian/gpg
+  #   state: present
   # apt_key:
   #   url: https://download.docker.com/linux/debian/gpg
   #   state: present

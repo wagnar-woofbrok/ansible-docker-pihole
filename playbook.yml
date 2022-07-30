@@ -2,6 +2,7 @@
   gather_facts: true
   become: true  # run as superuser/root
   roles:
+    # - debug
     - bootstrap
     - docker
     - pihole

@@ -2,11 +2,15 @@
 Description=Dockerized DNS service for Raspberry Pi
 After=docker.service
 Requires=docker.service
+ReloadPropagatedFrom=docker.service
 
 [Service]
+Type=oneshot
 WorkingDirectory=/opt/dns
-ExecStart=docker-compose -f /opt/dns/docker-compose.yml up -d
-ExecStop=docker-compose -f /opt/dns/docker-compose.yml down
+ExecStart=/usr/bin/docker-compose -f /opt/dns/docker-compose.yml up -d
+ExecReload=/usr/bin/docker-compose -f /opt/dns/docker-compose.yml restart
+ExecStop=/usr/bin/docker-compose -f /opt/dns/docker-compose.yml down
+RemainAfterExit=True
 
 [Install]
 WantedBy=multi-user.target
