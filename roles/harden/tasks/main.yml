@@ -9,5 +9,5 @@
 - name: Include and run SSH hardening tasks
   ansible.builtin.include_tasks: ssh.yml
 
-# - name: Setup firewall using UFW
-#   ansible.builtin.include_tasks: ufw.yml
+- name: Setup firewall using UFW
+  ansible.builtin.include_tasks: ufw.yml
