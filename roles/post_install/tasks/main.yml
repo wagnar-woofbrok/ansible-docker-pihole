@@ -1,4 +1,6 @@
 ---
+# tasks file for post_install
+
 # PiHole post-install steps
 # https://docs.pi-hole.net/main/post-install/
 
@@ -11,9 +13,17 @@
   ansible.builtin.shell: |
     echo "static domain_name_servers=127.0.0.1" >> /etc/dhcpcd.conf
 
+# - name: Set static IP address for PiHole host
+#   become: true
+#   ansible.builtin.shell: |
+#     echo "interface eth0" >> /etc/dhcpcd.conf
+#     echo "static ip_address=192.168.1.53/24" >> /etc/dhcpcd.conf
+#     echo "static routers=192.168.1.1" >> /etc/dhcpcd.conf
+
 - name: Reboot pihole host
   ansible.builtin.reboot:
 
+# #########################
 
 # - name: IF DNSSEC is enabled in pihole, also enable it via systemd
 #   ansible.builtin.shell: |
