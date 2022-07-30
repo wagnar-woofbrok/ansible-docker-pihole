@@ -6,5 +6,5 @@
     - bootstrap
     - docker
     - pihole
-    # - dnscrypt
+    - dnscrypt
     # - harden

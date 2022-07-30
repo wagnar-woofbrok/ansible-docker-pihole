@@ -1,0 +1,6 @@
+---
+# tasks file for debug
+# DEBUG
+- name: Show ansible facts available on the system
+  ansible.builtin.debug:
+    var: ansible_facts
