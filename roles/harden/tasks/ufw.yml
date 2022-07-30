@@ -1,17 +1,18 @@
 ---
 # tasks file for UFW firewall
-#   we need ports for 22 (SSH) and the game server 2456-2458 open
+# https://docs.pi-hole.net/main/prerequisites/#ufw
 
 - name: Set firewall rules
   ansible.builtin.shell: |
     ufw reset
     ufw default deny incoming
     ufw default deny outgoing
-    ufw allow 22
-    ufw allow 53
-    ufw allow 5353
-    ufw allow 80
-    ufw allow 443
+    ufw allow 22/tcp
+    ufw allow 80/tcp
+    ufw allow 53/tcp
+    ufw allow 53/udp
+    ufw allow 67/tcp
+    ufw allow 67/udp
 
 - name: Enable and start UFW
   ansible.builtin.shell: |
