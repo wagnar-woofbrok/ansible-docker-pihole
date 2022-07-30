@@ -42,7 +42,7 @@ services:
     # Build custom dnscrypt image customized for A-DNS || ODoH, etc. (alpine)
     image: klutchell/dnscrypt-proxy:latest
     volumes:
-      - /opt/dns/config:/config
+      - /opt/dns/dnscrypt-proxy:/config
     dns:
       - 1.1.1.1 # bootstrap DNS, not used for queries
     ports:

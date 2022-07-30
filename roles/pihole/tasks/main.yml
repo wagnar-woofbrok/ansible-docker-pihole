@@ -6,7 +6,6 @@
     mkdir -p /opt/dns
     mkdir -p /opt/dns/config
     mkdir -p /opt/dns/config/etc-pihole
-    mkdir -p /opt/dns/config/etc-dnscrypt
 
 - name: Process env_file for pihole
   ansible.builtin.template:
@@ -28,3 +27,4 @@
   ansible.builtin.shell: |
     sudo systemctl enable dns.service
     sudo systemctl start dns.service
+    
