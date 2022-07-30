@@ -6,8 +6,13 @@
 # print architecture info: $uname -sm (Linux armv7l)
 
 - name: Download dnscrypt-proxy release 2.1.1
+  ansible.builtin.get_url:
+    url: https://github.com/DNSCrypt/dnscrypt-proxy/releases/download/2.1.1/dnscrypt-proxy-linux_arm-2.1.1.tar.gz
+    dest: /opt/dnscrypt-proxy-linux_arm-2.1.1.tar.gz
+    # checksum: sha256:x3434234234
+
+- name: Extract dnscrypt-proxy release 2.1.1
   ansible.builtin.shell: |
-    curl -SL -O https://github.com/DNSCrypt/dnscrypt-proxy/releases/download/2.1.1/dnscrypt-proxy-linux_arm-2.1.1.tar.gz
     tar xzvf dnscrypt-proxy-linux_arm-2.1.1.tar.gz
     mv linux-arm dnscrypt-proxy
     rm dnscrypt-proxy-linux_arm-2.1.1.tar.gz
@@ -19,8 +24,9 @@
     src: templates/dnscrypt-proxy.toml.j2
     dest: /opt/dnscrypt-proxy/dnscrypt-proxy.toml
 
-- name: Install dnscrypt-proxy service
-  become: true
-  ansible.builtin.shell: |
-    /opt/dnscrypt-proxy/dnscrypt-proxy -service install
-    /opt/dnscrypt-proxy/dnscrypt-proxy -service start
+# Not required when dockerizing dnscrypt-proxy
+# - name: Install dnscrypt-proxy service
+#   become: true
+#   ansible.builtin.shell: |
+#     /opt/dnscrypt-proxy/dnscrypt-proxy -service install
+#     /opt/dnscrypt-proxy/dnscrypt-proxy -service start

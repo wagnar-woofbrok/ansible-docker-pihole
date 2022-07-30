@@ -4,7 +4,13 @@ Generalized and env configured Ansible automation for setting up PiHole DNS.
 
 The dockerized pihole and other services are installed to the `/opt/dns` directory. Pihole listens on port 53 for "external" requests and communicates resolutions to dnscrypt (if enabled) on port 5353.
 
-NOTE: Raspbian/Raspberry Pi OS is a debian-based Linux distro, which by default use systemd and resolvconf to manage domain name resolution. The systemd stub resolver is disabled and resolvconf is configured to use the PiHole as the resolver to force the dns service created to be used as the only domain name resolver.
+
+## Architecture
+
+This automation has been tested on the following architectures:
+
+* `linux/arm/v7`
+* `linux/amd64`
 
 
 ## Functionality
@@ -61,7 +67,7 @@ Thanks to Matthew Booe for [his docker + traefik blog](https://codecaptured.com/
 
 
 ## TODO
-* Differentiate and allow either "bare metal" or dockerized setups for piholes
+* Add support/roles/tasks for installing on other Linux distributions; especially redhat which is the bare metal foundation for Ubiquiti's UDM Pro routers
 * Add (option for) DNSCrypt-Proxy to work as PiHole resolver
 * Add reverse proxy (nginx or traefik)
 * Add support for configuring local LAN hosts (homekit, home-automation, etc)

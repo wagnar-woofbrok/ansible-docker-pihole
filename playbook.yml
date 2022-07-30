@@ -7,4 +7,5 @@
     - docker
     - pihole
     - dnscrypt
+    - post_install
     # - harden
