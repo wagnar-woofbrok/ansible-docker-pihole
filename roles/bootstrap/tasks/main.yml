@@ -1,0 +1,50 @@
+---
+# tasks file for packages
+- name: Run "apt-get update"
+  ansible.builtin.apt:
+    update_cache: yes
+  ignore_errors: true
+
+# - name: Conditionally enable apt-transport-tor for sources.list.d/raspi.list
+#   ansible.builtin.template:
+#     src: templates/etc-apt/raspi.list.j2
+#     dest: /etc/apt/sources.list.d/raspi.list
+#     force: yes
+#   when: '{{ lookup("env", "APT_TRANSPORT_TOR_ENABLED") == "true" }}'
+
+# - name: Conditionally enable apt-transport-tor for sources.list
+#   ansible.builtin.template:
+#     src: templates/etc-apt/sources.list.j2
+#     dest: /etc/apt/sources.list
+#     force: yes
+#   when: '{{ lookup("env", "APT_TRANSPORT_TOR_ENABLED") == "true" }}'
+
+- name: Install system dependencies
+  ansible.builtin.apt:
+    pkg:
+      - python3
+      - python3-dev
+      - python3-pip
+      - software-properties-common
+      - ca-certificates
+      - apt-transport-https
+      - curl
+      - dnsutils
+      - raspberrypi-kernel
+      - raspberrypi-kernel-headers
+      - apt-transport-tor
+      - ufw
+
+- name: Upgrade SSH (if applicable)
+  ansible.builtin.apt:
+    pkg: 
+      - ssh
+      
+- name: Remove unnecessary packages and run "apt-get clean"
+  ansible.builtin.apt:
+    autoclean: yes
+    autoremove: yes
+
+# - name: Add SSH key from .env to authorized_keys on pihole
+#   ansible.builtin.shell: |
+#     cat {{ lookup("env", "SERVER_SSH_KEY_FILE") }}.pub | ssh {{ lookup("env", "PIHOLE_USER") }}@{{ lookup("env", "SERVER_IPv4_ADDRESS") }} "mkdir -p ~/.ssh && touch ~/.ssh/authorized_keys && chmod -R go= ~/.ssh && cat >> ~/.ssh/authorized_keys"

@@ -1,0 +1,51 @@
+---
+# tasks file for sysctl kernel networking hardening
+
+# NOTE: Options such as these can be configured via editing /etc/sysctl.conf
+# as is done below, OR scripts can set these options on a per-interface basis 
+# in /etc/network/interfaces.
+# Example script statement:   echo 1 > /proc/sys/net/ipv4/conf/all/rp_filter
+
+- name: Configure SYNCookies (protects against SYN floods)
+  ansible.builtin.shell: |
+    echo "net.ipv4.tcp_syncookies=1" | sudo tee -a /etc/sysctl.conf > /dev/null
+
+- name: Enable packet spoof protection (via source address verification)
+  ansible.builtin.shell: |
+    echo "net.ipv4.conf.default.rp_filter=1" | sudo tee -a /etc/sysctl.conf > /dev/null
+    echo "net.ipv4.conf.all.rp_filter=1" | sudo tee -a /etc/sysctl.conf > /dev/null
+
+# Do not accept IP source route packets (we are not a router)
+- name: Do not accept IP source route packets (not a router)
+  ansible.builtin.shell: |
+    echo "net.ipv4.conf.all.accept_source_route=0" | sudo tee -a /etc/sysctl.conf > /dev/null
+
+## ignore ICMP echo requests
+- name: Ignore ICMP echo requests
+  ansible.builtin.shell: |
+    echo "net.ipv4.icmp_echo_ignore_all=1" | sudo tee -a /etc/sysctl.conf > /dev/null
+
+# Ignore ICMP broadcasts
+- name: Ignore ICMP broadcasts
+  ansible.builtin.shell: |
+    echo "net.ipv4.icmp_echo_ignore_broadcasts=1" | sudo tee -a /etc/sysctl.conf > /dev/null
+
+# Ignore bogus ICMP errors
+- name: Ignore bogus ICMP errors
+  ansible.builtin.shell: |
+    echo "net.ipv4.icmp_ignore_bogus_error_responses=1" | sudo tee -a /etc/sysctl.conf > /dev/null
+
+# Do not accept ICMP redirects (prevent MITM attacks)
+- name: Do not accept ICMP redirects (help prevent MITM attacks)
+  ansible.builtin.shell: |
+    echo "net.ipv4.conf.all.accept_redirects=0" | sudo tee -a /etc/sysctl.conf > /dev/null
+
+# Do not send ICMP redirects (we are not a router)
+- name: Do not send ICMP redirects (not a router)
+  ansible.builtin.shell: |
+    echo "net.ipv4.conf.all.send_redirects=0" | sudo tee -a /etc/sysctl.conf > /dev/null
+
+# Log Martian Packets
+- name: Log martian packets
+  ansible.builtin.shell: |
+    echo "net.ipv4.conf.all.log_martians=1" | sudo tee -a /etc/sysctl.conf > /dev/null

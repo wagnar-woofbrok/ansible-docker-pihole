@@ -1,0 +1,18 @@
+---
+# tasks file for UFW firewall
+#   we need ports for 22 (SSH) and the game server 2456-2458 open
+
+- name: Set firewall rules
+  ansible.builtin.shell: |
+    ufw reset
+    ufw default deny incoming
+    ufw default deny outgoing
+    ufw allow 22
+    ufw allow 53
+    ufw allow 80
+    ufw allow 443
+
+- name: Enable and start UFW
+  ansible.builtin.shell: |
+    ufw enable
+    ufw start

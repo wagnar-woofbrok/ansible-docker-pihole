@@ -1,0 +1,13 @@
+---
+# tasks file for harden
+# Ubuntu IS-A debian instance, so we harden some networking settings according to
+# https://www.debian.org/doc/manuals/securing-debian-manual/network-secure.en.html
+
+- name: Include and run sysctl hardening tasks
+  ansible.builtin.include_tasks: sysctl.yml
+
+- name: Include and run SSH hardening tasks
+  ansible.builtin.include_tasks: ssh.yml
+
+# - name: Setup firewall using UFW
+#   ansible.builtin.include_tasks: ufw.yml

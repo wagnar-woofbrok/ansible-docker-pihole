@@ -1,0 +1,61 @@
+version: '3.5'
+
+services:
+  pihole:
+    container_name: pihole
+    image: pihole/pihole:latest
+    ports:
+      - "53:53/tcp"
+      - "53:53/udp"
+      - "80:80/tcp"
+      - "443:443/tcp"
+    env_file:
+      - /opt/dns/config/pihole.env
+		# NOTE: IFF running PiHole-Docker on redhat systems, the volumes
+		# entries must end in "...:z"
+		# https://github.com/pi-hole/docker-pi-hole/#running-pi-hole-docker
+    volumes:
+      - /opt/dns/config/etc-pihole:/etc/pihole
+      - /opt/dns/config/etc-dnsmasq.d:/etc/dnsmasq.d
+    dns:
+      - 1.1.1.1 # bootstrap DNS, not used for queries
+    networks:
+      dns_net:
+        ipv4_address: 10.0.1.3
+    cap_add:
+      - net_admin 				# modify routing tables and other network-related operations
+      - net_bind_service 	# Allows FTLDNS binding to TCP/UDP sockets below 1024 (specifically DNS service on port 53)
+      - net_raw 					# use raw and packet sockets (needed for handling DHCPv6 requests, and verifying that an IP is not in use before leasing it)
+      - sys_nice 					# FTL sets itself as an important process
+      - cap_chown 				# need to be able to change ownership of log files and databases in case FTL is started as a different user 
+{% if lookup("env", "DNSCRYPT_ENABLED") == "true" %}
+    depends_on:
+      - dnscrypt
+{% endif %}
+    restart: unless-stopped
+
+{% if lookup("env", "DNSCRYPT_ENABLED") == "true" %}
+  dnscrypt:
+    container_name: dnscrypt
+    # TODO
+    # Build custom dnscrypt image customized for A-DNS || ODoH, etc. (alpine)
+    image: klutchell/dnscrypt-proxy:latest
+    volumes:
+      - /opt/dns/config:/config
+    dns:
+      - 1.1.1.1 # bootstrap DNS, not used for queries
+    expose:
+      - "5353/tcp"
+      - "5353/udp"
+    networks:
+      dns_net:
+        ipv4_address: 10.0.1.2
+    restart: unless-stopped
+{% endif %}
+
+networks:
+  dns_net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.0.1.0/24

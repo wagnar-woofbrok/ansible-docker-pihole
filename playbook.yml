@@ -1,8 +1,9 @@
-- hosts: valheim
+- hosts: pihole
   gather_facts: true
   become: true  # run as superuser/root
   roles:
-    - packages
+    - bootstrap
     - docker
-    # - pihole
+    - pihole
+    # - dnscrypt
     # - harden

@@ -1,0 +1,27 @@
+---
+# tasks file for SSH hardening
+# Guidance from Debian manual
+#   https://www.debian.org/doc/manuals/securing-debian-manual/sec-services.en.html#id-1.6.6
+
+# TODO
+# Enable passworded/encrypted ssh private keys for ansible provisioning
+#   https://stackoverflow.com/questions/61366942/ansible-ssh-authentication-with-password-and-private-key
+#   https://linuxhint.com/how_to_use_sshpass_to_login_for_ansible/
+# AND setup non-root users for services and SSH and disable root SSH access
+
+- name: Force use of SSH v2
+  ansible.builtin.shell: |
+    echo "Protocol 2" | sudo tee -a /etc/ssh/sshd_config > /dev/null
+
+# sed -i 's/STRING_TO_REPLACE/STRING_TO_REPLACE_IT/g' filename
+
+- name: Disable Password-based access (if eapplicablenabled)
+  ansible.builtin.shell: |
+    sed -i 's/PasswordAuthentication yes/PasswordAuthentication no/g' /etc/ssh/sshd_config
+
+- name: Disable ssh agent, X11 and TCP forwarding (if applicable)
+  ansible.builtin.shell: |
+    sed -i 's/AllowAgentForwarding yes/AllowAgentForwarding no/g' /etc/ssh/sshd_config
+    sed -i 's/AllowTcpForwarding yes/AllowTcpForwarding no/g' /etc/ssh/sshd_config
+    sed -i 's/X11Forwarding yes/X11Forwarding no/g' /etc/ssh/sshd_config
+

@@ -1,0 +1,25 @@
+---
+# Tasks for configuring systemd-resolved on raspberry pi to use PiHole
+- name: IF DNSSEC is enabled in pihole, also enable it via systemd
+  ansible.builtin.shell: |
+    sed -r -i.orig 's/#?DNSSEC=no/DNSSEC=yes/g' /etc/systemd/resolved.conf
+  when: '{{ lookup("env", "DNSCRYPT_ENABLED") == "true" }}' 
+
+# TODO
+# https://github.com/pi-hole/pi-hole/wiki/DNSCrypt-2.0#dnssec-validation
+# - name: IF DNSSEC is enabled in pihole, and dnscrypt is enabled, also enable DNSSEC in the dnscrypt "proxy-dnssec"
+#   ansible.builtin.shell: |
+#     echo "proxy-dnssec" >> /etc/dnsmasq.d/02-dnscrypt.conf
+#   when: TODO - how to check if file exists? Does NOT on raspbian.
+
+- name: IF DNSSEC is not enabled in pihole, disable it via systemd
+  ansible.builtin.shell: |
+    sed -r -i.orig 's/#?DNSSEC=yes/DNSSEC=no/g' /etc/systemd/resolved.conf
+  when: '{{ lookup("env", "DNSCRYPT_ENABLED") == "false" }}' 
+
+- name: Disable SystemD DNSStubListener
+  become: true 
+  ansible.builtin.shell: |
+    sed -r -i.orig 's/#?DNSStubListener=yes/DNSStubListener=no/g' /etc/systemd/resolved.conf
+    sh -c 'rm /etc/resolv.conf && ln -s /run/systemd/resolve/resolv.conf /etc/resolv.conf'
+    systemctl restart systemd-resolved
