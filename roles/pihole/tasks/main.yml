@@ -29,8 +29,8 @@
     sudo systemctl enable dns.service
     sudo systemctl start dns.service
 
-# - name: Include and run systemd-resolved configuration tasks
-#   ansible.builtin.include_tasks: configure_systemd.yml
+- name: Run post-install for PiHole
+  ansible.builtin.include_tasks: post_install.yml
 
 # - name: Add PiHole as the (only) static DNS server on the Pi
 #   ansible.builtin.shell: |

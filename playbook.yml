@@ -3,8 +3,9 @@
   become: true  # run as superuser/root
   roles:
     # - debug
-    - bootstrap
-    - docker
-    - pihole
-    - dnscrypt
+    # - bootstrap
+    # - docker
+    # - pihole
+    # - dnscrypt
+    - systemd_resolved
     # - harden

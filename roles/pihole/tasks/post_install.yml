@@ -1,0 +1,50 @@
+---
+# PiHole post-install steps
+# https://docs.pi-hole.net/main/post-install/
+
+# NOTE: PiHole now includes dnsmasq built into its FTLDNS engine,
+# which means we don't want to configure dnsmasq separately,
+# which used to be an old workaround for this.
+
+- name: Configure pihole host to use pihole for all DNS resolution
+  become: true
+  ansible.builtin.shell: |
+    echo "static domain_name_servers=127.0.0.1" >> /etc/dhcpcd.conf
+
+- name: Reboot pihole host
+  ansible.builtin.reboot:
+
+
+# - name: IF DNSSEC is enabled in pihole, also enable it via systemd
+#   ansible.builtin.shell: |
+#     sed -r -i.orig 's/#?DNSSEC=no/DNSSEC=yes/g' /etc/systemd/resolved.conf
+#     sed -r -i.orig 's/#?DNS=/DNS=127.0.0.1/g' /etc/systemd/resolved.conf
+#   when: lookup("env", "DNSCRYPT_ENABLED") == "true"
+
+# # TODO
+# # https://github.com/pi-hole/pi-hole/wiki/DNSCrypt-2.0#dnssec-validation
+# # - name: IF DNSSEC is enabled in pihole, and dnscrypt is enabled, also enable DNSSEC in the dnscrypt "proxy-dnssec"
+# #   ansible.builtin.shell: |
+# #     echo "proxy-dnssec" >> /etc/dnsmasq.d/02-dnscrypt.conf
+# #   when: TODO - how to check if file exists? Does NOT on raspbian.
+
+# - name: IF DNSSEC is not enabled in pihole, disable it via systemd
+#   ansible.builtin.shell: |
+#     sed -r -i.orig 's/#?DNSSEC=yes/DNSSEC=no/g' /etc/systemd/resolved.conf
+#   when: lookup("env", "DNSCRYPT_ENABLED") == "false"
+
+# - name: Disable SystemD DNSStubListener
+#   become: true 
+#   ansible.builtin.shell: |
+#     sed -r -i.orig 's/#?DNSStubListener=yes/DNSStubListener=no/g' /etc/systemd/resolved.conf
+#     sh -c 'rm /etc/resolv.conf && ln -s /run/systemd/resolve/resolv.conf /etc/resolv.conf'
+#     systemctl restart systemd-resolved
+  
+# # TODO
+# # Is it best practice to disable systemd resolved? Will the machine use its own
+# # pihole after being setup?
+# - name: Disable systemd-resolved
+#   become: true
+#   ansible.builtin.shell: |
+#     systemctl stop systemd-resolved
+#     systemctl disable systemctl-resolved
