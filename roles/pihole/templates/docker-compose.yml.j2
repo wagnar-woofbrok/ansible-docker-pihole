@@ -45,9 +45,9 @@ services:
       - /opt/dns/config:/config
     dns:
       - 1.1.1.1 # bootstrap DNS, not used for queries
-    expose:
-      - "5353/tcp"
-      - "5353/udp"
+    ports:
+      - "53:5353/tcp"
+      - "53:5353/udp"
     networks:
       backend:
         ipv4_address: 10.0.1.2

@@ -28,17 +28,3 @@
   ansible.builtin.shell: |
     sudo systemctl enable dns.service
     sudo systemctl start dns.service
-
-- name: Run post-install for PiHole
-  ansible.builtin.include_tasks: post_install.yml
-
-# - name: Add PiHole as the (only) static DNS server on the Pi
-#   ansible.builtin.shell: |
-#     echo "static domain_name_servers=127.0.0.1" >> /etc/dhcpcd.conf
-#     sudo service dhcpcd restart
-#   # (Validate) check the regenerated /etc/resolv.conf file
-
-# TEST
-#   name resolution should show resolving @ 127.0.0.1
-# dig ...
-# nslookup ... 

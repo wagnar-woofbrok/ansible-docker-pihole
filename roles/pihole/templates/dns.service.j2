@@ -7,9 +7,9 @@ ReloadPropagatedFrom=docker.service
 [Service]
 Type=oneshot
 WorkingDirectory=/opt/dns
-ExecStart=/usr/bin/docker-compose -f /opt/dns/docker-compose.yml up -d
-ExecReload=/usr/bin/docker-compose -f /opt/dns/docker-compose.yml restart
-ExecStop=/usr/bin/docker-compose -f /opt/dns/docker-compose.yml down
+ExecStart=DOCKER_BUILDKIT=1 /usr/bin/docker-compose -f /opt/dns/docker-compose.yml up -d
+ExecReload=DOCKER_BUILDKIT=1 /usr/bin/docker-compose -f /opt/dns/docker-compose.yml restart
+ExecStop=DOCKER_BUILDKIT=1 /usr/bin/docker-compose -f /opt/dns/docker-compose.yml down
 RemainAfterExit=True
 
 [Install]
