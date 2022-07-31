@@ -2,10 +2,14 @@
 # tasks file for UFW firewall
 # https://docs.pi-hole.net/main/prerequisites/#ufw
 
-- name: Set firewall rules and enable UFW
+- name: Reset UFW firewall rules
   become: true
   ansible.builtin.shell: |
-    ufw reset
+    echo "y" | ufw reset
+
+- name: Set UFW firewalls rules
+  become: true
+  ansible.builtin.shell: |
     ufw default deny incoming
     ufw default deny outgoing
     ufw allow 22/tcp
@@ -16,3 +20,8 @@
     ufw allow 67/tcp
     ufw allow 67/udp
     ufw enable
+
+- name: Enable UFW firewall after configuring for pihole
+  become: true
+  ansible.builtin.shell: |
+    echo "y" | ufw enable

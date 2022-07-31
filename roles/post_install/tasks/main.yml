@@ -8,11 +8,19 @@
 # which means we don't want to configure dnsmasq separately,
 # which used to be an old workaround for this.
 
-- name: Set static IP address for PiHole host
+# NOTE: For checking variables for being empty in Ansible
+# https://stackoverflow.com/questions/36912726/ansible-how-to-test-that-a-registered-variable-is-not-empty
+- name: Set static host IP address for PiHole host
   become: true
   ansible.builtin.shell: |
     echo "static ip_address=192.168.1.53/24" >> /etc/dhcpcd.conf
+  when: lookup("env", "HOST_STATIC_ADDRESS") | length > 0
+
+- name: Set static router IP address for PiHole host
+  become: true
+  ansible.builtin.shell: |
     echo "static routers=192.168.1.1" >> /etc/dhcpcd.conf
+  when: lookup("env", "HOST_STATIC_ROUTER_ADDRESS") | length > 0
 
 - name: Configure pihole host to use pihole for all DNS resolution
   become: true

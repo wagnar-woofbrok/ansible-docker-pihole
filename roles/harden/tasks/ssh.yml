@@ -15,7 +15,7 @@
 
 # sed -i 's/STRING_TO_REPLACE/STRING_TO_REPLACE_IT/g' filename
 
-- name: Disable Password-based access (if eapplicablenabled)
+- name: Disable Password-based access (if is enabled)
   ansible.builtin.shell: |
     sed -i 's/PasswordAuthentication yes/PasswordAuthentication no/g' /etc/ssh/sshd_config
 
