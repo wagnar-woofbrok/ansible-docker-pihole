@@ -10,7 +10,7 @@ services:
       - "80:80/tcp"
       - "443:443/tcp"
     env_file:
-      - /opt/dns/config/pihole.env
+      - /opt/dns/config/etc-pihole/pihole.env
     # NOTE: IFF running PiHole-Docker on redhat systems, the volumes
     # entries must end in "...:z"
     # https://github.com/pi-hole/docker-pi-hole/#running-pi-hole-docker
@@ -21,6 +21,7 @@ services:
       - 127.0.0.1
       - 9.9.9.9 # bootstrap DNS, not used for queries
     networks:
+      lan: {}
       backend:
         ipv4_address: 10.0.1.3
     cap_add:
@@ -60,3 +61,5 @@ networks:
     ipam:
       config:
         - subnet: 10.0.1.0/24
+  lan:
+    external: true

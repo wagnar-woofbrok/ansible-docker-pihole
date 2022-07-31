@@ -20,6 +20,17 @@
 #     echo "static ip_address=192.168.1.53/24" >> /etc/dhcpcd.conf
 #     echo "static routers=192.168.1.1" >> /etc/dhcpcd.conf
 
+- name: Disable systemd-resolved
+  become: true
+  ansible.builtin.shell: |
+    systemctl stop systemd-resolved
+    systemctl disable systemctl-resolved
+
+- name: Enable and start the dockerized dns service
+  ansible.builtin.shell: |
+    sudo systemctl enable dns.service
+    sudo systemctl start dns.service
+
 - name: Reboot pihole host
   ansible.builtin.reboot:
 
