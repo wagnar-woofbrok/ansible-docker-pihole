@@ -8,17 +8,16 @@
 # which means we don't want to configure dnsmasq separately,
 # which used to be an old workaround for this.
 
-# - name: Set static IP address for PiHole host
-#   become: true
-#   ansible.builtin.shell: |
-#     echo "interface eth0" >> /etc/dhcpcd.conf
-#     echo "static ip_address=192.168.1.53/24" >> /etc/dhcpcd.conf
-#     echo "static routers=192.168.1.1" >> /etc/dhcpcd.conf
+- name: Set static IP address for PiHole host
+  become: true
+  ansible.builtin.shell: |
+    echo "static ip_address=192.168.1.53/24" >> /etc/dhcpcd.conf
+    echo "static routers=192.168.1.1" >> /etc/dhcpcd.conf
 
-#- name: Configure pihole host to use pihole for all DNS resolution
-#  become: true
-#  ansible.builtin.shell: |
-#    echo "static domain_name_servers=127.0.0.1" >> /etc/dhcpcd.conf
+- name: Configure pihole host to use pihole for all DNS resolution
+  become: true
+  ansible.builtin.shell: |
+    echo "static domain_name_servers=127.0.0.1" >> /etc/dhcpcd.conf
 
 # NOTE: dnsmasq is now built into PiHole's FTL, and so during pihole 
 # run it creates /etc/dnsmasq/ files. Therefore, we still apply
@@ -30,6 +29,7 @@
     touch /opt/dns/config/etc-dnsmasq.d/02-dnscrypt.conf
     echo "proxy-dnssec" >> /opt/dns/config/etc-dnsmasq.d/02-dnscrypt.conf
   ignore_errors: true
+  when: lookup("env", "DNSSEC_ENABLED") == "true"
 
 - name: Reboot pihole host
   ansible.builtin.reboot:

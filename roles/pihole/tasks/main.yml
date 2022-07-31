@@ -9,7 +9,7 @@
     mkdir -p /opt/dns/config
     mkdir -p /opt/dns/config/etc-pihole
     mkdir -p /opt/dns/config/etc-dnsmasq.d
-    chmod -R 755 /opt/dns
+    chmod -R 766 /opt/dns
 
 - name: Process env_file for pihole
   ansible.builtin.template:
