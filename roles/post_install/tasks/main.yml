@@ -19,8 +19,8 @@
 # Is it best practice to disable systemd resolved? Will the machine use its own
 # pihole after being setup? (resolve port 53 bind conflict)
 - name: Enable and start the dockerized dns service
-  ansible.builtin.shell: |
-    sudo systemctl enable dns.service
+  ansible.builtin.shell: | 
+    sudo systemctl enable --now dns.service
     sudo systemctl start dns.service
 
 #- name: Configure pihole host to use pihole for all DNS resolution
