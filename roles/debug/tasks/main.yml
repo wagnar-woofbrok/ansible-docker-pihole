@@ -4,3 +4,11 @@
 - name: Show ansible facts available on the system
   ansible.builtin.debug:
     var: ansible_facts
+
+# Experimental: write ansible_facts to file
+# - name: Experimental - write ansible_facts to JSON file
+#   copy:
+#     content: "{{ ansible_facts }}"
+#     dest: /home/pi/ansible_facts.json
+#   delegate_to: localhost
+#   run_once: true

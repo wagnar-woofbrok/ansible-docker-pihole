@@ -3,6 +3,7 @@
 # klutchell/dnscrypt-proxy requires DOCKER_BUILDKIT
 - name: Enable DOCKER_BUILDKIT for docker and docker-compose on PiHole hosts
   ansible.builtin.shell: |
+    mkdir -p /etc/docker
     echo '{ "features": { "buildkit": true } }' >> /etc/docker/daemon.json
 
 - name: Process docker-compose.yml file for pihole server

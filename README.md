@@ -4,20 +4,19 @@ Generalized and env configured Ansible automation for setting up PiHole DNS.
 
 The dockerized pihole and other services are installed to the `/opt/dns` directory. Pihole listens on port 53 for "external" requests and communicates resolutions to dnscrypt (if enabled) on port 5353.
 
+This automation offers the following functionality:
+
+* PiHole and other DNS services are dockerized and run using docker-compose
+* (Optional) DNSCrypt-Proxy v2 as a resolver to add encrypted DNS queries (Anonymous DNS, DoH, DoT, ODoH)
+
 
 ## Architecture
 
 This automation has been tested on the following architectures:
 
-* `linux/arm/v7`
-* `linux/amd64`
-
-
-## Functionality
-
-* PiHole and other DNS services are dockerized and run using docker-compose
-* (Optional) DNSCrypt-Proxy v2 as a resolver to add encrypted DNS queries (Anonymous DNS, DoH, DoT, ODoH)
-* (Optional) Configure `apt-transport-tor` to add authenticated and encrypted channel to improve security of updates (ideal would be tor+https)
+* `Raspberry Pi OS - linux/arm/v7`
+* `Ubuntu 20.04 - linux/amd64`
+* `Raspbian OS Buster - linux/arm`
 
 
 ## Requirements
@@ -41,6 +40,17 @@ If you used the [Raspberry Pi Imager](https://www.raspberrypi.com/software/), yo
 ### First-time setup
 
 The first time the pi is setup, you will need to create and fill out a `.env` file similar to the provided example `.env.example`. These values are used to configure the templates, settings and services for the pi DNS.
+
+After the Ansible playbook runs for the first time setup, it can take up to 10 minutes depending on the target host for pihole and other services to finish setting up. The web admin page and DNS services won't be available until these complete their setup process.
+
+You can check the logs for the services using the following commands:
+
+```
+$ docker-compose -f /opt/dns/docker-compose.yml logs
+$ docker-compose -f /opt/dns/docker-compose.yml logs pihole
+$ docker-compose -f /opt/dns/docker-compose.yml logs dnscrypt
+```
+
 
 ### Reset the admin web password for PiHole
 

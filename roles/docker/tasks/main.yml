@@ -2,10 +2,37 @@
 # tasks file for docker
 # https://docs.ansible.com/ansible/latest/user_guide/playbooks_conditionals.html#commonly-used-facts
 
-- name: Install docker, conditional debian distro 
-  ansible.builtin.include_tasks: ubuntu.yml
-  when: ansible_facts['os_family'] == "Ubuntu"
+# TODO
+# Configure subtask files for docker-compose install and use ENV configured architecture
 
-- name: Install docker, conditional debian distro 
-  ansible.builtin.include_tasks: debian.yml
-  when: ansible_facts['os_family'] == "Debian"
+- name: Install docker using official automation script
+  become: true
+  ansible.builtin.shell: |
+    curl -fsSL https://get.docker.com | sh
+    
+# - name: Install docker for Ubuntu
+#   ansible.builtin.include_tasks: ubuntu.yml
+#   when: ansible_facts['os_family'] == "Ubuntu"
+
+# # Does Ansible detect raspbian vs debian?
+# - name: Install docker for raspbian
+#   when: ansible_facts['os_family'] == "Raspbian"
+
+## Install docker-compose
+- name: Downloading binary for docker-compose 
+  ansible.builtin.shell: |
+    curl -SL https://github.com/docker/compose/releases/download/v2.8.0/docker-compose-linux-armv7 -o /usr/bin/docker-compose
+    chmod +x /usr/bin/docker-compose 
+
+- name: Add PIHOLE_USER to docker group
+  become: true
+  ansible.builtin.shell: usermod -aG docker '{{ lookup("env", "PIHOLE_USER") }}'
+
+- name: Enable and start Docker systemd service
+  ansible.builtin.shell: |
+    sudo systemctl enable docker.service
+    sudo systemctl start docker.service
+
+# - name: Install docker for Debian
+#   ansible.builtin.include_tasks: debian.yml
+#   when: ansible_facts['os_family'] == "Debian"
