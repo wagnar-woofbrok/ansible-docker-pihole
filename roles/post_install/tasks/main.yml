@@ -26,6 +26,9 @@
     systemctl stop systemd-resolved
     systemctl disable systemctl-resolved
 
+# TODO
+# Is it best practice to disable systemd resolved? Will the machine use its own
+# pihole after being setup? (resolve port 53 bind conflict)
 - name: Enable and start the dockerized dns service
   ansible.builtin.shell: |
     sudo systemctl enable dns.service
@@ -60,12 +63,3 @@
 #     sed -r -i.orig 's/#?DNSStubListener=yes/DNSStubListener=no/g' /etc/systemd/resolved.conf
 #     sh -c 'rm /etc/resolv.conf && ln -s /run/systemd/resolve/resolv.conf /etc/resolv.conf'
 #     systemctl restart systemd-resolved
-  
-# # TODO
-# # Is it best practice to disable systemd resolved? Will the machine use its own
-# # pihole after being setup?
-# - name: Disable systemd-resolved
-#   become: true
-#   ansible.builtin.shell: |
-#     systemctl stop systemd-resolved
-#     systemctl disable systemctl-resolved
