@@ -20,12 +20,6 @@
 #     echo "static ip_address=192.168.1.53/24" >> /etc/dhcpcd.conf
 #     echo "static routers=192.168.1.1" >> /etc/dhcpcd.conf
 
-- name: Disable systemd-resolved
-  become: true
-  ansible.builtin.shell: |
-    systemctl stop systemd-resolved
-    systemctl disable systemctl-resolved
-
 # TODO
 # Is it best practice to disable systemd resolved? Will the machine use its own
 # pihole after being setup? (resolve port 53 bind conflict)
