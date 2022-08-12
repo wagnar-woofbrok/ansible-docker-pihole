@@ -136,6 +136,7 @@ Thanks to Matthew Booe for [his docker + traefik blog](https://codecaptured.com/
 * Add (option for) DNSCrypt-Proxy to work as PiHole resolver
 * Add reverse proxy (nginx or traefik)
 * Add and configure `fail2ban` for at least SSH and possibly web routes such as pihole admin
+* Restrict UFW rules - 80 and 443 should by default be only accessible from the same LAN/subnet as the pihole host (unless configuring something like a road warrior incoming connection)
 * Can the SDNS/IP address lookup be automated? (ttps://dnscrypt.info/stamps)
 * Add support for configuring local LAN hosts (homekit, home-automation, etc)
 * Improve configurability of dnscrypt and other service settings; include being able to reconfigure and restart/redeploy the dns service(s); include configuring dnscrypt-proxy modes such as anonymized DNS, DoH, DoT, ODoH, etc; include optional configurations such as a (tor) proxy for dnscrypt-proxy; also revamp README with tables for env vars and configurations
