@@ -74,6 +74,14 @@ fatal: [server]: FAILED! => {"changed": false, "msg": "Failed to update apt cach
 
 Unless this is the first time setup run, this is not a problem and can be ignored.
 
+2. If the logs indicate dnscrypt-proxy cannot start because its port binding is already in use, try checking for what is using that port with this command:
+
+```
+lsof -i:PORT (e.g., lsof -i:5353)
+```
+
+This happens in older versions of this project when host network_mode is used, because Debian linux distros have a daemon called "avahi" already running on UDP port 5353.
+
 
 ## Thanks and Contributions
 
