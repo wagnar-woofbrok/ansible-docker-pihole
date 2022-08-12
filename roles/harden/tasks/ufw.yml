@@ -17,9 +17,6 @@
     ufw allow 443/tcp
     ufw allow 53/tcp
     ufw allow 53/udp
-    ufw allow 67/tcp
-    ufw allow 67/udp
-    ufw enable
 
 - name: Enable UFW firewall after configuring for pihole
   become: true
