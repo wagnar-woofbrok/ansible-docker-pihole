@@ -6,9 +6,11 @@
 # in /etc/network/interfaces.
 # Example script statement:   echo 1 > /proc/sys/net/ipv4/conf/all/rp_filter
 
-- name: Configure SYNCookies (protects against SYN floods)
+- name: Protect against SYN floods
   ansible.builtin.shell: |
     echo "net.ipv4.tcp_syncookies=1" | sudo tee -a /etc/sysctl.conf > /dev/null
+    echo "net.ipv4.tcp_synack_retries=2" | sudo tee -a /etc/sysctl.conf > /dev/null
+    echo "net.ipv4.tcp_syn_retries=5" | sudo tee -a /etc/sysctl.conf > /dev/null
 
 - name: Enable packet spoof protection (via source address verification)
   ansible.builtin.shell: |
@@ -19,6 +21,7 @@
 - name: Do not accept IP source route packets (not a router)
   ansible.builtin.shell: |
     echo "net.ipv4.conf.all.accept_source_route=0" | sudo tee -a /etc/sysctl.conf > /dev/null
+    echo "net.ipv4.conf.default.accept_source_route=0" | sudo tee -a /etc/sysctl.conf > /dev/null
 
 ## ignore ICMP echo requests
 - name: Ignore ICMP echo requests
@@ -39,6 +42,7 @@
 - name: Do not accept ICMP redirects (help prevent MITM attacks)
   ansible.builtin.shell: |
     echo "net.ipv4.conf.all.accept_redirects=0" | sudo tee -a /etc/sysctl.conf > /dev/null
+    echo "net.ipv4.conf.default.accept_redirects=0" | sudo tee -a /etc/sysctl.conf > /dev/null
 
 # Do not send ICMP redirects (we are not a router)
 - name: Do not send ICMP redirects (not a router)
