@@ -3,28 +3,8 @@
 # Ubuntu IS-A debian instance, so we harden some networking settings according to
 # https://www.debian.org/doc/manuals/securing-debian-manual/network-secure.en.html
 
-# - name: Include and run sysctl hardening tasks
-#   ansible.builtin.include_tasks: sysctl.yml
-- name: Configure SYNCookies (protects against SYN floods)
-  ansible.builtin.shell: |
-    echo "net.ipv4.tcp_syncookies=1" | sudo tee -a /etc/sysctl.conf > /dev/null
-
-- name: Enable packet spoof protection (via source address verification)
-  ansible.builtin.shell: |
-    echo "net.ipv4.conf.default.rp_filter=1" | sudo tee -a /etc/sysctl.conf > /dev/null
-    echo "net.ipv4.conf.all.rp_filter=1" | sudo tee -a /etc/sysctl.conf > /dev/null
-
-# Do not accept ICMP redirects (prevent MITM attacks)
-- name: Do not accept ICMP redirects (help prevent MITM attacks)
-  ansible.builtin.shell: |
-    echo "net.ipv4.conf.all.accept_redirects=0" | sudo tee -a /etc/sysctl.conf > /dev/null
-
-# Disable IPv6
-- name: Disable IPv6
-  ansible.builtin.shell: |
-    echo "net.ipv6.conf.all.disable_ipv6=1" | sudo tee -a /etc/sysctl.conf > /dev/null
-    echo "net.ipv6.conf.default.disable_ipv6=1" | sudo tee -a /etc/sysctl.conf > /dev/null
-    echo "net.ipv6.conf.lo.disable_ipv6=1" | sudo tee -a /etc/sysctl.conf > /dev/null
+- name: Include and run sysctl hardening tasks
+  ansible.builtin.include_tasks: sysctl.yml
 
 - name: Include and run SSH hardening tasks
   ansible.builtin.include_tasks: ssh.yml
