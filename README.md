@@ -118,7 +118,12 @@ If you have any issues where the PiHole and DNSCrpy containers and services seem
 [UFW BLOCK] IN= OUT=eth0 SRC=192.168.1.111 DST=1.2.3.4 ... PROTO=UDP SPT=53335 DPT=443 LEN=612 
 ```
 
-For reference, `SPT` is "source port" and `DPT` is "destination port" for the (blocked) outgoing DNS resolution packet attempt. This means the containers/services are working but the firewall won't let the DNS requests go, so check your relay-server configurations and make sure you have UFW rules for allowing outgoing connections to relay servers. Alternatively, you can simply disable the UFW firewall on the PiHole host (`$ sudo ufw disable`), but this is bad security! Gotta watch out for hacker bois on the internets and yo LANs.
+For reference, `SPT` is "source port" and `DPT` is "destination port" for the (blocked) outgoing DNS resolution packet attempt. This means the containers/services are working but the firewall won't let the DNS requests go, so check your relay-server configurations and make sure you have UFW rules for allowing outgoing connections to relay servers. Alternatively, you can either:
+
+1. simply disable the UFW firewall on the PiHole host `$ sudo ufw disable`, but this is bad security, or
+2. allow outgoing connections in general (strongly suggest you don't allow incoming generally though) with the command `$ sudo ufw allow incoming`
+
+Generally, the stricter your UFW rules, the better your firewall security, but the more likely you might have an issue if IP addresses change, but security and convenience are always a trade off.
 
 
 ## Thanks and Contributions
