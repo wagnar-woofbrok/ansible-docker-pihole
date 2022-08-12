@@ -22,6 +22,15 @@
     echo "static routers=192.168.1.1" >> /etc/dhcpcd.conf
   when: lookup("env", "HOST_STATIC_ROUTER_ADDRESS") | length > 0
 
+# WARNING
+# If there is any issue with the dns service or pihole container,
+# then this configuration line will break all DNS resolution 
+# on the pihole host!
+# If you have problems or the service does not start, then check 
+# that DNS lookups still work and remove this line if not until 
+# the service runs OK:
+#   $ dig google.com [@127.0.0.1]   to test using pihole
+#   $ dig google.com [@1.1.1.1]     to test using CloudFlare DNS
 - name: Configure pihole host to use pihole for all DNS resolution
   become: true
   ansible.builtin.shell: |
