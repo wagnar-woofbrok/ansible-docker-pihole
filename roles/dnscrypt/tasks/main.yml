@@ -21,12 +21,14 @@
 - name: Fix permissions for dnscrypt /config bound dir  
   become: true
   ansible.builtin.shell: |
-    chmod -R 766 /opt/dns/dnscrypt-proxy
+    chmod -R 777 /opt/dns/dnscrypt-proxy
   
 - name: Configure dnscrypt-proxy
   ansible.builtin.template:
     src: templates/dnscrypt-proxy.toml.j2
     dest: /opt/dns/dnscrypt-proxy/dnscrypt-proxy.toml
+    owner: pi
+    group: docker
 
 # Not required when dockerizing dnscrypt-proxy
 # - name: Install dnscrypt-proxy service
