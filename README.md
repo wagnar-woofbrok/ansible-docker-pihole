@@ -2,7 +2,7 @@
 
 Generalized and env configured Ansible automation for setting up PiHole DNS.
 
-The dockerized pihole and other services are installed to the `/opt/dns` directory. Pihole listens on port 53 for "external" requests and communicates resolutions to dnscrypt (if enabled) on port 5353.
+The dockerized pihole and other services are installed to the `/opt/dns` directory. Pihole listens on port 53 for "external" requests and communicates resolutions to dnscrypt (if enabled) on port 5300.
 
 This automation offers the following functionality:
 
