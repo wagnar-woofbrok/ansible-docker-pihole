@@ -1,7 +1,7 @@
 ---
 # tasks file for pihole
 
-# BUG - /config/public-resolvers.md: open sf-qebbjr6ztrhmqo26.tmp: permission denied
+# TODO - use env var PIHOLE_USER here, try vars/
 - name: Create dirs for dns services files
   become: true
   ansible.builtin.shell: |
@@ -10,6 +10,7 @@
     mkdir -p /opt/dns/config/etc-pihole
     mkdir -p /opt/dns/config/etc-dnsmasq.d
     chmod -R 766 /opt/dns
+    chown -R pi /opt/dns
 
 - name: Process env_file for pihole
   ansible.builtin.template:
@@ -27,8 +28,7 @@
     dest: /etc/systemd/system/dns.service
     mode: '0640'
 
-# - name: Enable and start the dockerized dns service
-#   ansible.builtin.shell: |
-#     sudo systemctl enable dns.service
-#     sudo systemctl start dns.service
-    
+- name: Pull latest pihole image
+  ansible.builtin.shell: |
+    docker pull pihole/pihole:latest
+    docker pull klutchell/dnscrypt-proxy:latest
