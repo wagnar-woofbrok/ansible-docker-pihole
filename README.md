@@ -55,6 +55,34 @@ $ docker-compose -f /opt/dns/docker-compose.yml logs pihole
 $ docker-compose -f /opt/dns/docker-compose.yml logs dnscrypt
 ```
 
+#### Anonymized DNS
+
+If you're running this with DNSCrpyt-proxy configured for Anonymized DNS (the default configuration), then you'll need to perform a couple extra steps to get the firewall rules correct.
+
+Anonymized DNS operates (simplified) by using encryption around the DNS queries and separating the domain name answering server from your client/dnscrypt by using a relay. Relays are (usually) listed as `sdns://...` which is a DNS stamp.
+
+For each of the Anonymized relays you configure in your `.env` you'll need to go [here](https://dnscrypt.info/stamps/) and use the stamp to parse the IP address. Then, for each of those IPv4 addresses, add a line like this to the list of UFW rules in `roles/harden/tasks/ufw.yml`, assuming your interface is `eth0` which is the default ethernet interface for raspberry pis:
+
+```
+- name: Set UFW firewalls rules
+  become: true
+  ansible.builtin.shell: |
+    ufw default deny incoming
+    ufw default deny outgoing
+    ufw allow 22/tcp
+    ufw allow 80/tcp
+    ufw allow 443/tcp
+    ufw allow 53/tcp
+    ufw allow 53/udp
+    ufw allow out on eth0 to 1.2.3.4 (or w/e the relay ip address is)
+```
+
+If you need to see what interfaces you're working with (on Linux), run this command and look for an assigned IP address in the subnet of the LAN the PiHole host is on:
+
+```
+$ ip addr
+```
+
 
 ### Reset the admin web password for PiHole
 
@@ -82,6 +110,16 @@ lsof -i:PORT (e.g., lsof -i:5353)
 
 This happens in older versions of this project when host network_mode is used, because Debian linux distros have a daemon called "avahi" already running on UDP port 5353.
 
+3. The PiHole and DNSCrypt containers are running and the logs indicate they're OK, but DNS requests fail. If you try to dig/nslookup on the pihoe host and get messages about the connection/request timing out or no name server being found, the problem is probably the firewall (UFW) rules. 
+
+If you have any issues where the PiHole and DNSCrpy containers and services seem to be fine and should be working, but are not, the problem is likely either the `/etc/dhcpcd.conf` name server configuration on the pihole host or the UFW firewall rules. You can tail or cat the UFW logs at `/var/log/ufw.log` to look; if you see lines like this it's telling you the firewall is blocking outgoing traffic (possibly to a relay):
+
+```
+[UFW BLOCK] IN= OUT=eth0 SRC=192.168.1.111 DST=1.2.3.4 ... PROTO=UDP SPT=53335 DPT=443 LEN=612 
+```
+
+For reference, `SPT` is "source port" and `DPT` is "destination port" for the (blocked) outgoing DNS resolution packet attempt. This means the containers/services are working but the firewall won't let the DNS requests go, so check your relay-server configurations and make sure you have UFW rules for allowing outgoing connections to relay servers. Alternatively, you can simply disable the UFW firewall on the PiHole host (`$ sudo ufw disable`), but this is bad security! Gotta watch out for hacker bois on the internets and yo LANs.
+
 
 ## Thanks and Contributions
 
@@ -92,6 +130,8 @@ Thanks to Matthew Booe for [his docker + traefik blog](https://codecaptured.com/
 * Add support/roles/tasks for installing on other Linux distributions; especially redhat which is the bare metal foundation for Ubiquiti's UDM Pro routers
 * Add (option for) DNSCrypt-Proxy to work as PiHole resolver
 * Add reverse proxy (nginx or traefik)
+* Add and configure `fail2ban` for at least SSH and possibly web routes such as pihole admin
+* Can the SDNS/IP address lookup be automated? (ttps://dnscrypt.info/stamps)
 * Add support for configuring local LAN hosts (homekit, home-automation, etc)
 * Improve configurability of dnscrypt and other service settings; include being able to reconfigure and restart/redeploy the dns service(s); include configuring dnscrypt-proxy modes such as anonymized DNS, DoH, DoT, ODoH, etc; include optional configurations such as a (tor) proxy for dnscrypt-proxy; also revamp README with tables for env vars and configurations
 * Setup docker secret file for webpassword for pihole web admin
