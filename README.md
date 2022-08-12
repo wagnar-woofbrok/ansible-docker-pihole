@@ -39,7 +39,11 @@ If you used the [Raspberry Pi Imager](https://www.raspberrypi.com/software/), yo
 ## Usage
 ### First-time setup
 
-The first time the pi is setup, you will need to create and fill out a `.env` file similar to the provided example `.env.example`. These values are used to configure the templates, settings and services for the pi DNS.
+The first time the pi is setup, you will need to create and fill out a `.env` file similar to the provided example `.env.example`. These values are used to configure the templates, settings and services for the pi DNS. Then, run the script that wraps the Ansible playbook in a shell environment with the Env Vars from `.env`:
+
+```
+$ ./path/to/ansible-pihole/ansible-playbook.sh
+```
 
 After the Ansible playbook runs for the first time setup, it can take up to 10 minutes depending on the target host for pihole and other services to finish setting up. The web admin page and DNS services won't be available until these complete their setup process.
 
