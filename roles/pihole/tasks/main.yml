@@ -16,7 +16,7 @@
   ansible.builtin.template:
     src: templates/pihole.env.j2
     dest: /opt/dns/config/etc-pihole/pihole.env
-    mode: '0755'
+    mode: "0755"
 
 # Process docker-compose services config files
 - name: Process docker-compose services config files
@@ -26,9 +26,9 @@
   ansible.builtin.template:
     src: templates/dns.service.j2
     dest: /etc/systemd/system/dns.service
-    mode: '0640'
+    mode: "0640"
 
 - name: Pull latest pihole image
   ansible.builtin.shell: |
-    docker pull pihole/pihole:latest
-    docker pull klutchell/dnscrypt-proxy:latest
+    docker pull pihole/pihole:'{{ lookup("env", "PIHOLE_IMAGE_VERSION") }}'
+    docker pull klutchell/dnscrypt-proxy:'{{ lookup("env", "DNSCRYPT_IMAGE_VERSION") }}'
