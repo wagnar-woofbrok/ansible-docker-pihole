@@ -132,10 +132,9 @@ Thanks to Matthew Booe for [his docker + traefik blog](https://codecaptured.com/
 
 
 ## TODO
+* Secure access to credentials and password on server/pi: HC Vault container? 1P connect server?
 * Add support/roles/tasks for installing on other Linux distributions; especially redhat which is the bare metal foundation for Ubiquiti's UDM Pro routers
-* Add (option for) DNSCrypt-Proxy to work as PiHole resolver
 * Add reverse proxy (nginx or traefik)
-* Add and configure `fail2ban` for at least SSH and possibly web routes such as pihole admin
 * Restrict UFW rules - 80 and 443 should by default be only accessible from the same LAN/subnet as the pihole host (unless configuring something like a road warrior incoming connection)
 * Can the SDNS/IP address lookup be automated? (ttps://dnscrypt.info/stamps)
 * Add support for configuring local LAN hosts (homekit, home-automation, etc)

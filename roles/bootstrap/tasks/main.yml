@@ -40,19 +40,19 @@
       - dnsutils
       - raspberrypi-kernel
       - raspberrypi-kernel-headers
-      - apt-transport-tor
       - ufw
+      - fail2ban
+      # - apt-transport-tor
 
 - name: Upgrade SSH (if applicable)
   ansible.builtin.apt:
-    pkg: 
+    pkg:
       - ssh
-      
+
 - name: Remove unnecessary packages and run "apt-get clean"
   ansible.builtin.apt:
     autoclean: yes
     autoremove: yes
-
 # - name: Add SSH key from .env to authorized_keys on pihole
 #   ansible.builtin.shell: |
 #     cat {{ lookup("env", "SERVER_SSH_KEY_FILE") }}.pub | ssh {{ lookup("env", "PIHOLE_USER") }}@{{ lookup("env", "SERVER_IPv4_ADDRESS") }} "mkdir -p ~/.ssh && touch ~/.ssh/authorized_keys && chmod -R go= ~/.ssh && cat >> ~/.ssh/authorized_keys"

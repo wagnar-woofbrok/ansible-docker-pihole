@@ -1,0 +1,15 @@
+---
+# tasks file for fail2ban setup
+# Monitoring fail2ban:
+#   sudo fail2ban-client status [sshd]
+
+- name: Write configured jail.local file for SSH brute force protection
+  ansible.builtin.template:
+    src: templates/jail.local.j2
+    dest: /etc/fail2ban/jail.local
+    mode: "0755"
+
+- name: Force use of SSH v2
+  ansible.builtin.shell: |
+    systemctl enable fail2ban.service
+    systemctl start fail2ban.service

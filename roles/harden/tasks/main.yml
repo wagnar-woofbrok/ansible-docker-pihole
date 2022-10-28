@@ -11,3 +11,6 @@
 
 - name: Setup firewall using UFW
   ansible.builtin.include_tasks: ufw.yml
+
+- name: Setup fail2ban
+  ansible.builtin.include_tasks: fail2ban.yml
