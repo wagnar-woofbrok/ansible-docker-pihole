@@ -8,6 +8,24 @@
 # which means we don't want to configure dnsmasq separately,
 # which used to be an old workaround for this.
 
+- name: Configure static name servers for bootstrapping (raspberry pi)
+  ansible.builtin.template:
+    src: templates/final-resolvconf.conf.j2
+    dest: /etc/resolvconf.conf
+    mode: "0664"
+  when:
+    - ansible_facts['os_family'] == "Debian"
+    - ansible_facts['nodename'] == "raspberrypi"
+    - lookup("env", "BOOTSTRAP_NAME_SERVER") | length > 0
+
+- name: Update resolvconf with final configuration for pihole as system dns
+  become: true
+  ansible.builtin.shell: sudo resolvconf -u
+  when:
+    - ansible_facts['os_family'] == "Debian"
+    - ansible_facts['nodename'] == "raspberrypi"
+    - lookup("env", "BOOTSTRAP_NAME_SERVER") | length > 0
+
 # NOTE: For checking variables for being empty in Ansible
 # https://stackoverflow.com/questions/36912726/ansible-how-to-test-that-a-registered-variable-is-not-empty
 - name: Set static host IP address for PiHole host
@@ -50,7 +68,7 @@
   when:
     - ansible_facts['os_family'] == "Debian"
     - ansible_facts['nodename'] == "raspberrypi"
-    - lookup("env", "BOOTSTRAP_NAME_SERVERS") | length > 0
+    - lookup("env", "BOOTSTRAP_NAME_SERVER") | length > 0
 
 # NOTE: dnsmasq is now built into PiHole's FTL, and so during pihole
 # run it creates /etc/dnsmasq/ files. Therefore, we still apply

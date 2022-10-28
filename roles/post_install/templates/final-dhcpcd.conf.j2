@@ -58,4 +58,6 @@ slaac private
 #interface eth0
 #fallback static_eth0
 
-static domain_name_servers={{ lookup("env", "BOOTSTRAP_NAME_SERVERS") }}
+static domain_name_servers=127.0.0.1
+static routers=192.168.1.1
+static ip_address={{ lookup("env", "HOST_STATIC_ADDRESS") }}

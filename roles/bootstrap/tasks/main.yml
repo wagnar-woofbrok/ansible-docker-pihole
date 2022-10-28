@@ -1,14 +1,18 @@
 ---
 # tasks file for packages
-- name: Configure static name servers for bootstrapping (raspberry pi)
-  ansible.builtin.template:
-    src: templates/bootstrap-dhcpcd.conf.j2
-    dest: /etc/dhcpcd.conf
-    mode: "0664"
-  when:
-    - ansible_facts['os_family'] == "Debian"
-    - ansible_facts['nodename'] == "raspberrypi"
-    - lookup("env", "BOOTSTRAP_NAME_SERVERS") | length > 0
+# - name: Configure static name servers for bootstrapping (raspberry pi)
+#   ansible.builtin.template:
+#     src: templates/bootstrap-resolvconf.conf.j2
+#     dest: /etc/resolvconf.conf
+#     mode: "0664"
+#   when:
+#     - ansible_facts['os_family'] == "Debian"
+#     - ansible_facts['nodename'] == "raspberrypi"
+#     - lookup("env", "BOOTSTRAP_NAME_SERVERS") | length > 0
+
+# - name: Update resolvconf
+#   become: true
+#   ansible.builtin.shell: sudo resolvconf -u
 
 - name: Run "apt-get update"
   ansible.builtin.apt:
