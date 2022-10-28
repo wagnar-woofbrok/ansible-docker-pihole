@@ -13,21 +13,25 @@
 - name: Set static host IP address for PiHole host
   become: true
   ansible.builtin.shell: |
-    echo "static ip_address=192.168.1.53/24" >> /etc/dhcpcd.conf
-  when: lookup("env", "HOST_STATIC_ADDRESS") | length > 0
+    echo "static ip_address=lookup('env', 'HOST_STATIC_ADDRESS')" >> /etc/dhcpcd.conf
+  when:
+    - lookup("env", "HOST_STATIC_ADDRESS") | length > 0
+    - ansible_facts['nodename'] != "raspberrypi"
 
 - name: Set static router IP address for PiHole host
   become: true
   ansible.builtin.shell: |
     echo "static routers=192.168.1.1" >> /etc/dhcpcd.conf
-  when: lookup("env", "HOST_STATIC_ROUTER_ADDRESS") | length > 0
+  when:
+    - lookup("env", "HOST_STATIC_ROUTER_ADDRESS") | length > 0
+    - ansible_facts['nodename'] != "raspberrypi"
 
 # WARNING
 # If there is any issue with the dns service or pihole container,
-# then this configuration line will break all DNS resolution 
+# then this configuration line will break all DNS resolution
 # on the pihole host!
-# If you have problems or the service does not start, then check 
-# that DNS lookups still work and remove this line if not until 
+# If you have problems or the service does not start, then check
+# that DNS lookups still work and remove this line if not until
 # the service runs OK:
 #   $ dig google.com [@127.0.0.1]   to test using pihole
 #   $ dig google.com [@1.1.1.1]     to test using CloudFlare DNS
@@ -35,8 +39,20 @@
   become: true
   ansible.builtin.shell: |
     echo "static domain_name_servers=127.0.0.1" >> /etc/dhcpcd.conf
+  when:
+    - ansible_facts['nodename'] != "raspberrypi"
 
-# NOTE: dnsmasq is now built into PiHole's FTL, and so during pihole 
+- name: Configure static name servers for production (raspberry pi)
+  ansible.builtin.template:
+    src: templates/final-dhcpcd.conf.j2
+    dest: /etc/dhcpcd.conf
+    mode: "0664"
+  when:
+    - ansible_facts['os_family'] == "Debian"
+    - ansible_facts['nodename'] == "raspberrypi"
+    - lookup("env", "BOOTSTRAP_NAME_SERVERS") | length > 0
+
+# NOTE: dnsmasq is now built into PiHole's FTL, and so during pihole
 # run it creates /etc/dnsmasq/ files. Therefore, we still apply
 # dnsmasq changes for configurations such as DNSSEC as before but
 # we don't otherwise configure dnsmasq outside of pihole.
@@ -52,7 +68,7 @@
   ansible.builtin.reboot:
 
 - name: Enable and start the dockerized dns service
-  ansible.builtin.shell: | 
+  ansible.builtin.shell: |
     sudo systemctl enable dns.service
     sudo systemctl start dns.service
 
@@ -77,7 +93,7 @@
 #   when: lookup("env", "DNSCRYPT_ENABLED") == "false"
 
 # - name: Disable SystemD DNSStubListener
-#   become: true 
+#   become: true
 #   ansible.builtin.shell: |
 #     sed -r -i.orig 's/#?DNSStubListener=yes/DNSStubListener=no/g' /etc/systemd/resolved.conf
 #     sh -c 'rm /etc/resolv.conf && ln -s /run/systemd/resolve/resolv.conf /etc/resolv.conf'

@@ -4,7 +4,7 @@ services:
   pihole:
     container_name: pihole
     # https://hub.docker.com/r/pihole/pihole
-    image: pihole/pihole:{% lookup("env", "PIHOLE_IMAGE_VERSION") %}
+    image: pihole/pihole:{{ lookup("env", "PIHOLE_IMAGE_VERSION") }}
     # ports:
     #   - "53:53/tcp"
     #   - "53:53/udp"
@@ -41,7 +41,7 @@ services:
 {% if lookup("env", "DNSCRYPT_ENABLED") == "true" %}
   dnscrypt:
     container_name: dnscrypt
-    image: klutchell/dnscrypt-proxy:{% lookup("env", "DNSCRYPT_IMAGE_VERSION") %}
+    image: klutchell/dnscrypt-proxy:{{ lookup("env", "DNSCRYPT_IMAGE_VERSION") }}
     volumes:
       - /opt/dns/dnscrypt-proxy:/config
     dns:
