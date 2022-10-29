@@ -2,7 +2,7 @@
 # tasks file for sysctl kernel networking hardening
 
 # NOTE: Options such as these can be configured via editing /etc/sysctl.conf
-# as is done below, OR scripts can set these options on a per-interface basis 
+# as is done below, OR scripts can set these options on a per-interface basis
 # in /etc/network/interfaces.
 # Example script statement:   echo 1 > /proc/sys/net/ipv4/conf/all/rp_filter
 
@@ -61,3 +61,4 @@
     echo "net.ipv6.conf.all.disable_ipv6=1" | sudo tee -a /etc/sysctl.conf > /dev/null
     echo "net.ipv6.conf.default.disable_ipv6=1" | sudo tee -a /etc/sysctl.conf > /dev/null
     echo "net.ipv6.conf.lo.disable_ipv6=1" | sudo tee -a /etc/sysctl.conf > /dev/null
+  when: lookup("env", "BOOTSTRAP_NAME_SERVERS") == "true"
