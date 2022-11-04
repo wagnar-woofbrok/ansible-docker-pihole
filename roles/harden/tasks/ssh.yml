@@ -15,13 +15,20 @@
 
 # sed -i 's/STRING_TO_REPLACE/STRING_TO_REPLACE_IT/g' filename
 
-- name: Disable Password-based access (if is enabled) and Empty Passwords
-  ansible.builtin.shell: |
-    sed -i 's/PasswordAuthentication yes/PasswordAuthentication no/g' /etc/ssh/sshd_config
-    sed -i 's/PermitEmptyPasswords yes/PermitEmptyPasswords no/g' /etc/ssh/sshd_config
+- name: Process hardened sshd_config file and replace on target host
+  ansible.builtin.template:
+    src: templates/sshd_config.j2
+    dest: /etc/ssh/sshd_config
+    mode: "0755"
 
-- name: Disable ssh agent, X11 and TCP forwarding (if applicable)
-  ansible.builtin.shell: |
-    sed -i 's/AllowAgentForwarding yes/AllowAgentForwarding no/g' /etc/ssh/sshd_config
-    sed -i 's/AllowTcpForwarding yes/AllowTcpForwarding no/g' /etc/ssh/sshd_config
-    sed -i 's/X11Forwarding yes/X11Forwarding no/g' /etc/ssh/sshd_config
+# - name: Disable Password-based access (if is enabled) and Empty Passwords
+#   ansible.builtin.shell: |
+#     sed -i 's/PasswordAuthentication yes/PasswordAuthentication no/g' /etc/ssh/sshd_config
+#     sed -i 's/PasswordAuthentication yes/PasswordAuthentication no/g' /etc/ssh/sshd_config
+#     sed -i 's/PermitEmptyPasswords yes/PermitEmptyPasswords no/g' /etc/ssh/sshd_config
+
+# - name: Disable ssh agent, X11 and TCP forwarding (if applicable)
+#   ansible.builtin.shell: |
+#     sed -i 's/AllowAgentForwarding yes/AllowAgentForwarding no/g' /etc/ssh/sshd_config
+#     sed -i 's/AllowTcpForwarding yes/AllowTcpForwarding no/g' /etc/ssh/sshd_config
+#     sed -i 's/X11Forwarding yes/X11Forwarding no/g' /etc/ssh/sshd_config
