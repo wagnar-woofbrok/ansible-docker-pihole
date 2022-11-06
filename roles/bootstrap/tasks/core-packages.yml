@@ -1,0 +1,23 @@
+---
+# install core packages for DNS services host
+- name: Install system dependencies
+  ansible.builtin.apt:
+    pkg:
+      - python3
+      - python3-pip
+      - software-properties-common
+      - ca-certificates
+      - apt-transport-https
+      - curl
+      - gnupg
+      - lsb-release
+      - dnsutils
+      - raspberrypi-kernel
+      - raspberrypi-kernel-headers
+      - ufw
+      - fail2ban
+
+- name: Upgrade SSH (if applicable)
+  ansible.builtin.apt:
+    pkg:
+      - ssh

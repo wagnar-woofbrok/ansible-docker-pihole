@@ -1,0 +1,36 @@
+---
+# Host configuration for DNS services
+- name: Set locale
+  become: true
+  ansible.builtin.shell: |
+    echo "en_US.UTF-8" >> /etc/locale.gen
+    locale-gen en_US.UTF-8
+    update-locale en_US.UTF-8
+    
+- name: Block WiFi and BlueTooth with rfkill
+  become: true
+  ansible.builtin.shell: |
+    sudo rfkill block wifi
+    sudo rfkill block bluetooth
+
+# Fix DNS issue on Raspberry Pis with the initial/bootstrap DNS server
+## defaults to router, so in cases where the router is expecting 
+## this PiHole we need a bootstrap/setup DNS server
+- name: Configure static name servers for bootstrapping (raspberry pi)
+  ansible.builtin.template:
+    src: templates/bootstrap-resolvconf.conf.j2
+    dest: /etc/resolvconf.conf
+    mode: "0664"
+  when:
+    - ansible_facts['os_family'] == "Debian"
+    - ansible_facts['nodename'] == "raspberrypi"
+    - lookup("env", "BOOTSTRAP_NAME_SERVER") | length > 0
+  
+- name: Update resolvconf with domain name server configuration
+  become: true
+  ansible.builtin.shell: sudo resolvconf -u
+  when:
+    - ansible_facts['os_family'] == "Debian"
+    - ansible_facts['nodename'] == "raspberrypi"
+    - lookup("env", "BOOTSTRAP_NAME_SERVER") | length > 0
+
