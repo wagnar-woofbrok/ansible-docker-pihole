@@ -97,7 +97,7 @@ reset web admin password: $ docker exec -it pihole pihole -a -p
 DNS is inherently insecure, as is internet routing generally.
 By default, anyone (ISP, neighbor or otherwise) could sniff traffic and see what servers you're requesting and visiting. This provides a great deal of information that can be used to identify the websites you browse, services you use (including doctor/health information, say by checking the websites and seeing it's for this or that provider) and your personal habits and preferences. 
 
-Further, insecure DNS opens the possibility for either transparent-proxies or hijack/mitm attacks to provide malicious responses to DNS requests, potentially routing you to a compromised website with a payload that enables compromising one of your devices or even your router (among other possibilities). You should *never* trust insecure DNS, not in the wild west digital days we live in now. Block ads, but also approach DNS requests as if they're about trust - who do you really trust to know everything you're doing online? With insecure DNS, much of this is wide open to anyone that looks, for whateve reason.
+Further, insecure DNS opens the possibility for either transparent-proxies or hijack/mitm attacks to provide malicious responses to DNS requests, potentially routing you to a compromised website with a payload that enables compromising one of your devices or even your router (among other possibilities). You should *never* trust insecure DNS, not in the wild west digital days we live in now. Block ads, but also approach DNS requests as if they're about trust - who do you really trust to know everything you're doing online? With insecure DNS, much of this is wide open to anyone that looks, for whatever reason.
 
 You don't need to have something to hide to want to have privacy, and privacy is a universal human right.
 
@@ -111,17 +111,17 @@ PiHole is great for blocking advertisements, but on it's own by default it neith
 
 Even Pi-Hole + DNSCrypt-Proxy is not perfect. Even if you changed ports from the default 53, if your ISP or someone else is monitoring your traffic to satisfy their voyeurism or steal your data/information, they can still potentially identify the requests that are DNS requests by analyzing the traffic patterns and identifying the configured resolvers (or by using NetFlow data to track and time communication with any known Name Servers which the resolvers talk to).
 
-In events like this, if someone decides to try and force you to use compromised DNS servers or to pressure you into using fallback-and-insecure DNS, the most likely error you'll see is `Connection TIMEOUT` errors in the DNSCrypt-proxy container logs. If every single on of your resolvers has consistent timeout issues but your internet and network are otherwise not misconfigured or broken, then this means someone might be analyzing and blocking your ability to use secured DNS.
+In events like this, if someone decides to try and force you to use compromised DNS servers or to pressure you into using fallback-and-insecure DNS, the most likely error you'll see is `Connection TIMEOUT` errors in the DNSCrypt-proxy container logs. If every single one of your resolvers has consistent timeout issues but your internet and network are otherwise not misconfigured or broken, then this means someone might be analyzing and blocking your ability to use secured DNS.
 
-There is not a lot you can do against upstream or network-level adversaries, but keep this in mind and consider protecting absolutely all of the traffic from your router with authentication and encryption channels like a VPN. They could still block your access, but then they have to Denial-of-Service your entire internet connection and they won't gain any more information or spying ability by preventing your internet access entirely (unless their goal IS to DoS your internet, and while possible, is kind of petty).
+There is not a lot you can do against upstream or network-level adversaries, but keep this in mind and consider protecting absolutely all of the traffic from your router with authentication and encryption channels like a VPN. They could still block your access, but then they have to Denial-of-Service your entire internet connection and they won't gain any more information or spying ability by preventing your internet access entirely (unless their goal IS to DoS your internet, which while possible, is kind of petty and easily detectable).
 
 If you notice any kind of issue or you see your traffic failing to use the PiHole + DNSCrypt-Proxy, try these actions:
 
-1. SSH into the Pi-Hole Pi/Box/Host and check the container logs for the pihole and dnscrypt containers, which should contain error information such as timeouts or failures to start:
-2. Add more or change the resolvers and servers you're using, check the `.env.example` file for links to a list for these
-3. Try adding a proxy-connection to the pihole's traffic, routing the DNS queries themselves over a VPN, SSH tunnel, etc.; TODO - this feature will be added using a container-based VPN connection soon
+1. SSH into the Pi-Hole Pi/Box/Host and check the container logs for the pihole and dnscrypt containers, which should contain error information such as timeouts or failures to start.
+2. Add more or change the resolvers and servers you're using, check the `.env.example` file for links to a list for these.
+3. Try adding a proxy-connection to the pihole's traffic, routing the DNS queries themselves over a VPN, SSH tunnel, etc.; TODO - this feature will be added using a container-based VPN connection soon.
 
-You *can* use fallback DNS for this, most people do, and let it just use normal DNS if there are issues with this configuration. But if you do, you should really be logging and checking those logs regularly for issues, or you may not notice a compromise or attack that is reducing your security for a potentially worse attack. Hackers are like octopi - they want to break your shit apart and see if there's a crab inside; don't make it easy for them.
+You *can* use fallback DNS and let it just use normal DNS if there are issues with this configuration. But if you do, you should really be logging and checking those logs regularly for issues, or you may not notice a compromise or attack that is reducing your security for a potentially worse attack. Hackers are like octopi - they want to break your shit apart and see if there's a crab inside; don't make it easy for them.
 
 
 ## Known Issues
