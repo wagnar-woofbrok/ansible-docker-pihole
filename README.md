@@ -127,7 +127,7 @@ You *can* use fallback DNS and let it just use normal DNS if there are issues wi
 
 It's worth considering further improvements enhancing the privacy of DNS requests, especially while DNSCrypt-proxy is still being adopted and has a limited number of resolvers and servers available. Some ideas to enhance privacy:
 
-1. Clustered and Duplicate queries - copy the actual DNS queries to resolvers under, say, Anonymized-DNS, and send out clusters of queries to mask which one is the real query (the dnscrypt-proxy client thus being configured to ignore any but the intended target response); this might even include masking the request by mixing up the Domain Names being requested
+1. Clustered and Decoy queries - copy the actual DNS queries to resolvers under, say, Anonymized-DNS, and send out clusters of queries to mask which one is the real query (the dnscrypt-proxy client thus being configured to ignore any but the intended target response); this might even include masking the request by mixing up the Domain Names being requested
 2. Resolver-Server Chain rotation - strict or arbitrary scheduling can be used to change which resolvers and servers are being used; this makes it so that, over time, to observe all DNS requests an adversary would need to potentially monitor *all* the resolvers and servers and your connection to perform correlation/timing analysis to determine the actual resolver and server responding to DNS queries
 3. Mixing requests and metadata - improving the client and the resolvers so that metadata for queries to resolver is mixed before being passed to servers; this would help mitigate timing and correlation analysis of DNS queries made using DNSCrpyt-Proxy
 
