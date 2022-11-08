@@ -130,7 +130,6 @@ It's worth considering further improvements enhancing the privacy of DNS request
 1. Clustered and Decoy queries - copy the actual DNS queries to resolvers under, say, Anonymized-DNS, and send out clusters of queries to mask which one is the real query (the dnscrypt-proxy client thus being configured to ignore any but the intended target response); this might even include masking the request by mixing up the Domain Names being requested
 2. Resolver-Server Chain rotation - strict or arbitrary scheduling can be used to change which resolvers and servers are being used; this makes it so that, over time, to observe all DNS requests an adversary would need to potentially monitor *all* the resolvers and servers and your connection to perform correlation/timing analysis to determine the actual resolver and server responding to DNS queries
 3. Mixing requests and metadata - improving the client and the resolvers so that metadata for queries to resolver is mixed before being passed to servers; this would help mitigate timing and correlation analysis of DNS queries made using DNSCrpyt-Proxy; perhaps by a sort of [TURN Server](https://webrtc.org/getting-started/turn-server) connecting queries to resolver<>server chains
-4. TURN server like relays - 
 
 
 ## Known Issues
